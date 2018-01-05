@@ -1,0 +1,5 @@
+.idea
+cmake-build-debug
+dbms/src/Server/config-preprocessed.xml
+dbms/src/Server/users-preprocessed.xml
+

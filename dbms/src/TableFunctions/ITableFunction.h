@@ -1,0 +1,43 @@
+#pragma once
+
+#include <string>
+#include <memory>
+
+
+namespace DB
+{
+
+class Context;
+class IAST;
+using ASTPtr = std::shared_ptr<IAST>;
+class IStorage;
+using StoragePtr = std::shared_ptr<IStorage>;
+
+
+/** Interface for table functions.
+  *
+  * Table functions are not relevant to other functions.
+  * The table function can be specified in the FROM section instead of the [db.]Table
+  * The table function returns a temporary StoragePtr object that is used to execute the query.
+  *
+  * Example:
+  * SELECT count() FROM remote('example01-01-1', merge, hits)
+  * - go to `example01-01-1`, in `merge` database, `hits` table.
+  */
+
+class ITableFunction
+{
+public:
+    /// Get the main function name.
+    virtual std::string getName() const = 0;
+
+    /// Create storage according to the query
+    virtual StoragePtr execute(const ASTPtr & ast_function, const Context & context) const = 0;
+
+    virtual ~ITableFunction() {};
+};
+
+using TableFunctionPtr = std::shared_ptr<ITableFunction>;
+
+
+}
